@@ -67,7 +67,7 @@ USER ${NB_USER}
 ARG PYTHON_VERSION=default
 
 # Setup work directory for backward-compatibility
-RUN mkdir "/home/${NB_USER}/work"
+RUN mkdir -p "/home/${NB_USER}/work"
 
 # Install conda as jovyan and check the sha256 sum provided on the download site
 WORKDIR /tmp
