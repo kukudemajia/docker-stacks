@@ -12,18 +12,14 @@ OWNER?=kukudemajia
 # - linux/amd64
 # - linux/arm64
 MULTI_IMAGES:= \
-  base-notebook \
-  minimal-notebook \
-	hass-pyscript-jupyter
+  base-notebook
 
 # Images that can only be built on the amd64 architecture (aka. x86_64)
 AMD64_ONLY_IMAGES:=
 
 # All of the images
 ALL_IMAGES:= \
-  base-notebook \
-  minimal-notebook \
-	hass-pyscript-jupyter
+  base-notebook
 
 # Enable BuildKit for Docker build
 export DOCKER_BUILDKIT:=1
