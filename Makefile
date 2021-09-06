@@ -4,7 +4,7 @@
 
 # Use bash for inline if-statements in arch_patch target
 SHELL:=bash
-OWNER?=jupyter
+OWNER?=kukudemajia
 
 # Need to list the images in build dependency order
 
@@ -12,26 +12,18 @@ OWNER?=jupyter
 # - linux/amd64
 # - linux/arm64
 MULTI_IMAGES:= \
-	base-notebook \
-	minimal-notebook \
-	r-notebook \
-	scipy-notebook \
-	pyspark-notebook \
-	all-spark-notebook
+  base-notebook \
+  minimal-notebook \
+	hass-pyscript-jupyter
+
 # Images that can only be built on the amd64 architecture (aka. x86_64)
-AMD64_ONLY_IMAGES:= \
-	datascience-notebook \
-	tensorflow-notebook
+AMD64_ONLY_IMAGES:=
+
 # All of the images
 ALL_IMAGES:= \
-	base-notebook \
-	minimal-notebook \
-	r-notebook \
-	scipy-notebook \
-	tensorflow-notebook \
-	datascience-notebook \
-	pyspark-notebook \
-	all-spark-notebook
+  base-notebook \
+  minimal-notebook \
+	hass-pyscript-jupyter
 
 # Enable BuildKit for Docker build
 export DOCKER_BUILDKIT:=1
@@ -106,7 +98,7 @@ build-multi/%: ## build the latest image for a stack on both amd64 and arm64
 	@echo "::group::Build $(OWNER)/$(notdir $@) (amd64,arm64)"
 	docker buildx build -t build-multi-tmp-cache/$(notdir $@):latest ./$(notdir $@) --build-arg OWNER=$(OWNER) --platform "linux/amd64,linux/arm64"
 	@echo "::endgroup::"
-build-all-multi: $(foreach I, $(MULTI_IMAGES), build-multi/$(I)) $(foreach I, $(AMD64_ONLY_IMAGES), build/$(I)) ## build all stacks
+build-all-multi: $(foreach I, $(MULTI_IMAGES), build-multi/$(I)) ## build all stacks
 
 
 
@@ -144,7 +136,7 @@ docs: ## build HTML documentation
 hook/%: WIKI_PATH?=../wiki
 hook/%: ## run post-build hooks for an image
 	python3 -m tagging.tag_image --short-image-name "$(notdir $@)" --owner "$(OWNER)" && \
-	python3 -m tagging.create_manifests --short-image-name "$(notdir $@)" --owner "$(OWNER)" --wiki-path "$(WIKI_PATH)"
+	python3 -m tagging.create_manifests --short-image-name "$(notdir $@)" --owner "$(OWNER)"
 hook-all: $(foreach I, $(ALL_IMAGES), hook/$(I)) ## run post-build hooks for all images
 
 
