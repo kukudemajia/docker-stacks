@@ -8,9 +8,9 @@ ARG ROOT_CONTAINER=ubuntu:focal
 FROM $ROOT_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
-ARG NB_USER="jovyan"
-ARG NB_UID="1000"
-ARG NB_GID="100"
+ARG NB_USER="root"
+ARG NB_UID="0"
+ARG NB_GID="0"
 
 # Fix DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
