@@ -46,9 +46,6 @@ ENV CONDA_DIR=/opt/conda \
 ENV PATH="${CONDA_DIR}/bin:${PATH}" \
     HOME="/home/${NB_USER}"
 
-# Copy a script that we will use to correct permissions after running certain commands
-COPY fix-permissions /usr/local/bin/fix-permissions
-RUN chmod a+rx /usr/local/bin/fix-permissions
 
 # Enable prompt color in the skeleton .bashrc before creating the default NB_USER
 # hadolint ignore=SC2016
@@ -65,15 +62,12 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 #     mkdir -p "${CONDA_DIR}" && \
 #     chown "${NB_USER}:${NB_GID}" "${CONDA_DIR}" && \
 #     chmod g+w /etc/passwd && \
-#     fix-permissions "${HOME}" && \
-#     fix-permissions "${CONDA_DIR}"
 
 USER ${NB_UID}
 ARG PYTHON_VERSION=default
 
 # Setup work directory for backward-compatibility
-RUN mkdir "/home/${NB_USER}/work" && \
-    fix-permissions "/home/${NB_USER}"
+RUN mkdir "/home/${NB_USER}/work"
 
 # Install conda as jovyan and check the sha256 sum provided on the download site
 WORKDIR /tmp
@@ -100,9 +94,7 @@ RUN set -x && \
     # Using conda to update all packages: https://github.com/mamba-org/mamba/issues/1092
     conda update --all --quiet --yes && \
     conda clean --all -f -y && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    rm -rf "/home/${NB_USER}/.cache/yarn"
 
 # Install Jupyter Notebook, Lab, and Hub
 # Generate a notebook server config
@@ -118,9 +110,7 @@ RUN mamba install --quiet --yes \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     jupyter lab clean && \
-    rm -rf "/home/${NB_USER}/.cache/yarn" && \
-    fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    rm -rf "/home/${NB_USER}/.cache/yarn"
 
 EXPOSE 8888
 
@@ -138,8 +128,7 @@ USER root
 
 # Prepare upgrade to JupyterLab V3.0 #1205
 RUN sed -re "s/c.NotebookApp/c.ServerApp/g" \
-    /etc/jupyter/jupyter_notebook_config.py > /etc/jupyter/jupyter_server_config.py && \
-    fix-permissions /etc/jupyter/
+    /etc/jupyter/jupyter_notebook_config.py > /etc/jupyter/jupyter_server_config.py
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
