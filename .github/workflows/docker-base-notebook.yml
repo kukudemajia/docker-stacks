@@ -1,4 +1,4 @@
-name: Build, test, and publish Docker Images
+name: Build and publish base-notebook Docker Images
 
 on:
   #防止fork乱用action设置只能手动触发构建
