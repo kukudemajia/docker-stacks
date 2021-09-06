@@ -63,7 +63,7 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 #     chown "${NB_USER}:${NB_GID}" "${CONDA_DIR}" && \
 #     chmod g+w /etc/passwd && \
 
-USER ${NB_UID}
+USER ${NB_USER}
 ARG PYTHON_VERSION=default
 
 # Setup work directory for backward-compatibility
