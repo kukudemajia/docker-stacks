@@ -33,10 +33,10 @@ jobs:
       - name: Install Dev Dependencies
         run: |
           python -m pip install --upgrade pip
-          make -C main dev-env
+          make -C main -f Makefile-base-notebook dev-env
 
       - name: Build Docker Images
-        run: make -C main build-all-multi
+        run: make -C main -f Makefile-base-notebook build-all-multi
         env:
           # Full logs for CI build
           BUILDKIT_PROGRESS: plain
@@ -49,4 +49,4 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: Push Images to DockerHub
-        run: make -C main push-all-multi
+        run: make -C main -f Makefile-base-notebook push-all-multi
